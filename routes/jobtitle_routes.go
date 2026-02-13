@@ -8,18 +8,20 @@ import (
 	"go.mod/services"
 )
 
-func RegisterJobtitleRoutes(router *gin.RouterGroup, container *app.Container) {
+func RegisterJobtitleRoutes(router *gin.RouterGroup, container *app.Container, authMiddleware gin.HandlerFunc) {
 
 	// Setup layers
 	repo := repo.NewJobTitleRepository(container.DB)
 	service := services.NewJobTitleService(repo)
 	jobTitleController := controllers.NewJobTitleController(service)
 	jobTitleRoutes := router.Group("/job-titles")
+	// 🔒 Protected endpoints
+	protected := Protected(jobTitleRoutes, authMiddleware)
 	{
-		jobTitleRoutes.POST("", jobTitleController.Create)
-		jobTitleRoutes.GET("", jobTitleController.List)
-		jobTitleRoutes.GET("/:id", jobTitleController.Get)
-		jobTitleRoutes.PUT("/:id", jobTitleController.Update)
-		jobTitleRoutes.DELETE("/:id", jobTitleController.Delete)
+		protected.POST("", jobTitleController.Create)
+		protected.GET("", jobTitleController.List)
+		protected.GET("/:id", jobTitleController.Get)
+		protected.PUT("/:id", jobTitleController.Update)
+		protected.DELETE("/:id", jobTitleController.Delete)
 	}
 }

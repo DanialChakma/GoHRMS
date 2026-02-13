@@ -8,18 +8,21 @@ import (
 	"go.mod/services"
 )
 
-func RegisterPayrollRoutes(router *gin.RouterGroup, container *app.Container) {
+func RegisterPayrollRoutes(router *gin.RouterGroup, container *app.Container, authMiddleware gin.HandlerFunc) {
 
 	// Setup layers
 	repo := repo.NewPayrollRepository(container.DB)
 	service := services.NewPayrollService(repo)
 	payrollController := controllers.NewPayrollController(service)
 	payrollRoutes := router.Group("/payrolls")
+	// payrollRoutes.Use(authMiddleware)
+	// 🔒 Protected endpoints
+	protected := Protected(payrollRoutes, authMiddleware)
 	{
-		payrollRoutes.POST("", payrollController.CreatePayroll)
-		payrollRoutes.GET("", payrollController.ListPayrolls)
-		payrollRoutes.GET("/:id", payrollController.GetPayroll)
-		payrollRoutes.PUT("/:id", payrollController.UpdatePayroll)
-		payrollRoutes.DELETE("/:id", payrollController.DeletePayroll)
+		protected.POST("", payrollController.CreatePayroll)
+		protected.GET("", payrollController.ListPayrolls)
+		protected.GET("/:id", payrollController.GetPayroll)
+		protected.PUT("/:id", payrollController.UpdatePayroll)
+		protected.DELETE("/:id", payrollController.DeletePayroll)
 	}
 }

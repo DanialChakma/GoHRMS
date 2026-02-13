@@ -5,6 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mod/app"
+	"go.mod/auth"
+	"go.mod/initializers"
+	"go.mod/repo"
+	"go.mod/services"
 )
 
 func RegisterRoutes(router *gin.Engine, container *app.Container) {
@@ -14,6 +18,13 @@ func RegisterRoutes(router *gin.Engine, container *app.Container) {
 		apiPrefix = "/api/v1"
 	}
 
+	// ✅ Create Auth Middleware ONCE
+	authRepo := repo.NewAuthRepository(container.DB)
+	tokenService := services.NewTokenService(initializers.JwtKey, initializers.JwtRefreshKey)
+	authService := services.NewAuthService(authRepo, tokenService)
+
+	authMiddleware := auth.AuthMiddleware(authService, tokenService)
+
 	// Register Swagger directly on root router
 	RegisterSwaggerRoute(router)
 
@@ -22,15 +33,15 @@ func RegisterRoutes(router *gin.Engine, container *app.Container) {
 
 	RegisterAuthRoutes(api, container)
 	// employe
-	RegisterEmployeeRoutes(api, container)
+	RegisterEmployeeRoutes(api, container, authMiddleware)
 	// department
-	RegisterDepartmentRoutes(api, container)
+	RegisterDepartmentRoutes(api, container, authMiddleware)
 	// jobtitle
-	RegisterJobtitleRoutes(api, container)
+	RegisterJobtitleRoutes(api, container, authMiddleware)
 	// attendance
-	RegisterAttendanceRoutes(api, container)
+	RegisterAttendanceRoutes(api, container, authMiddleware)
 	// leave
-	RegisterLeaveRoutes(api, container)
+	RegisterLeaveRoutes(api, container, authMiddleware)
 	// payroll
-	RegisterPayrollRoutes(api, container)
+	RegisterPayrollRoutes(api, container, authMiddleware)
 }

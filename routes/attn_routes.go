@@ -8,15 +8,17 @@ import (
 	"go.mod/services"
 )
 
-func RegisterAttendanceRoutes(router *gin.RouterGroup, container *app.Container) {
+func RegisterAttendanceRoutes(router *gin.RouterGroup, container *app.Container, authMiddleware gin.HandlerFunc) {
 
 	// Setup layers
 	repo := repo.NewAttendanceRepository(container.DB)
 	service := services.NewAttendanceService(repo)
 	attendanceController := controllers.NewAttendanceController(service)
 	attendanceRoutes := router.Group("/attendance")
+	// 🔒 Protected endpoints
+	protected := Protected(attendanceRoutes, authMiddleware)
 	{
-		attendanceRoutes.POST("/checkin/:employee_id", attendanceController.CheckIn)
-		attendanceRoutes.POST("/checkout/:employee_id", attendanceController.CheckOut)
+		protected.POST("/checkin/:employee_id", attendanceController.CheckIn)
+		protected.POST("/checkout/:employee_id", attendanceController.CheckOut)
 	}
 }

@@ -8,18 +8,20 @@ import (
 	"go.mod/services"
 )
 
-func RegisterEmployeeRoutes(router *gin.RouterGroup, container *app.Container) {
+func RegisterEmployeeRoutes(router *gin.RouterGroup, container *app.Container, authMiddleware gin.HandlerFunc) {
 
 	// Setup layers
 	empRepo := repo.NewEmployeeRepository(container.DB)
 	empService := services.NewEmployeeService(empRepo)
 	empController := controllers.NewEmployeeController(empService)
 	empRoutes := router.Group("/employees")
+	// 🔒 Protected endpoints
+	protected := Protected(empRoutes, authMiddleware)
 	{
-		empRoutes.POST("", empController.CreateEmployee)
-		empRoutes.GET("", empController.ListEmployees)
-		empRoutes.GET("/:id", empController.GetEmployee)
-		empRoutes.PUT("/:id", empController.UpdateEmployee)
-		empRoutes.DELETE("/:id", empController.DeleteEmployee)
+		protected.POST("", empController.CreateEmployee)
+		protected.GET("", empController.ListEmployees)
+		protected.GET("/:id", empController.GetEmployee)
+		protected.PUT("/:id", empController.UpdateEmployee)
+		protected.DELETE("/:id", empController.DeleteEmployee)
 	}
 }
