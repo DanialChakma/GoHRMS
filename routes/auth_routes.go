@@ -24,6 +24,7 @@ func RegisterAuthRoutes(router *gin.RouterGroup, container *app.Container) {
 	router.POST("/register", authController.Register)
 	router.POST("/login", authController.Login)
 	router.POST("/refresh", authController.Refresh)
+	// router.Use(initializers.RateLimiterMiddleware)
 
 	// --------- Protected Routes ---------
 	protected := router.Group("/protected")

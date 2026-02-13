@@ -15,6 +15,7 @@ func Bootstrap() *Container {
 	initializers.LoadConfig()
 	initializers.LoadCryptoConfig()
 	initializers.ConnectDB()
+	initializers.InitRateLimiter()
 	initializers.RunMigrations()
 	// auth.InitAuthService(initializers.DB) // pass your MongoDB db object
 	// Redis

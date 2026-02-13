@@ -30,7 +30,7 @@ func RegisterRoutes(router *gin.Engine, container *app.Container) {
 
 	// Global API group
 	api := router.Group(apiPrefix)
-
+	api.Use(initializers.RateLimiterMiddleware)
 	RegisterAuthRoutes(api, container)
 	// employe
 	RegisterEmployeeRoutes(api, container, authMiddleware)

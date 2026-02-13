@@ -1814,7 +1814,37 @@ const docTemplate = `{
             "name": "Authorization",
             "in": "header"
         }
-    }
+    },
+    "tags": [
+        {
+            "description": "Operations related to Employee management",
+            "name": "Employees"
+        },
+        {
+            "description": "Operations for Attendance check-in, check-out",
+            "name": "Attendance"
+        },
+        {
+            "description": "Payroll creation, listing, and management",
+            "name": "Payroll"
+        },
+        {
+            "description": "Leave request creation, approval, rejection",
+            "name": "Leaves"
+        },
+        {
+            "description": "Department management",
+            "name": "Departments"
+        },
+        {
+            "description": "Job Title management",
+            "name": "JobTitles"
+        },
+        {
+            "description": "Authentication \u0026 Authorization endpoints",
+            "name": "Auth"
+        }
+    ]
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
@@ -1824,7 +1854,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/api/v1",
 	Schemes:          []string{"http", "https"},
 	Title:            "HRMS API",
-	Description:      "Human Resource Management System API built with Go (Gin framework), GORM, and MySQL. Supports Employee management, Attendance, Payroll, Leave Requests, Departments, Job Titles, and User Authentication/Authorization.",
+	Description:      "Human Resource Management System API built with Go (Gin framework), GORM, and MySQL.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

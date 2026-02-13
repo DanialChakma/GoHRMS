@@ -226,8 +226,7 @@ info:
     name: HRMS Support
     url: http://hrms.example.com/support
   description: Human Resource Management System API built with Go (Gin framework),
-    GORM, and MySQL. Supports Employee management, Attendance, Payroll, Leave Requests,
-    Departments, Job Titles, and User Authentication/Authorization.
+    GORM, and MySQL.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -1204,3 +1203,18 @@ securityDefinitions:
     name: Authorization
     type: apiKey
 swagger: "2.0"
+tags:
+- description: Operations related to Employee management
+  name: Employees
+- description: Operations for Attendance check-in, check-out
+  name: Attendance
+- description: Payroll creation, listing, and management
+  name: Payroll
+- description: Leave request creation, approval, rejection
+  name: Leaves
+- description: Department management
+  name: Departments
+- description: Job Title management
+  name: JobTitles
+- description: Authentication & Authorization endpoints
+  name: Auth
