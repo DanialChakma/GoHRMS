@@ -1,0 +1,1206 @@
+basePath: /api/v1
+definitions:
+  controllers.LoginRequest:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: john
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.RegisterRequest:
+    properties:
+      email:
+        example: john@example.com
+        type: string
+      password:
+        example: "123456"
+        type: string
+      role:
+        example: user
+        type: string
+      username:
+        example: john
+        type: string
+    required:
+    - email
+    - password
+    - role
+    - username
+    type: object
+  controllers.TokenResponse:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  dto.DepartmentListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Department'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  dto.EmployeeListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Employee'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  dto.JobTitleListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.JobTitle'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  dto.LeaveListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.LeaveRequest'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  dto.PayrollListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.Payroll'
+        type: array
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  models.Attendance:
+    properties:
+      check_in:
+        type: string
+      check_out:
+        type: string
+      date:
+        type: string
+      employee_id:
+        type: integer
+      id:
+        type: integer
+    type: object
+  models.Department:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.Employee:
+    properties:
+      department_id:
+        type: integer
+      email:
+        type: string
+      employee_code:
+        type: string
+      first_name:
+        type: string
+      hire_date:
+        type: string
+      id:
+        type: integer
+      job_title_id:
+        type: integer
+      last_name:
+        type: string
+      phone:
+        type: string
+      status:
+        type: string
+    type: object
+  models.JobTitle:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  models.LeaveRequest:
+    properties:
+      employee_id:
+        type: integer
+      end_date:
+        type: string
+      id:
+        type: integer
+      leave_type:
+        type: string
+      start_date:
+        type: string
+      status:
+        type: string
+    type: object
+  models.Payroll:
+    properties:
+      base_salary:
+        type: number
+      bonus:
+        type: number
+      deductions:
+        type: number
+      employee_id:
+        type: integer
+      id:
+        type: integer
+      month:
+        description: could be first day of month
+        type: string
+      net_salary:
+        type: number
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      employee_id:
+        type: integer
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      password:
+        type: string
+      role_id:
+        type: integer
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@hrms.example.com
+    name: HRMS Support
+    url: http://hrms.example.com/support
+  description: Human Resource Management System API built with Go (Gin framework),
+    GORM, and MySQL. Supports Employee management, Attendance, Payroll, Leave Requests,
+    Departments, Job Titles, and User Authentication/Authorization.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://hrms.example.com/terms/
+  title: HRMS API
+  version: "1.0"
+paths:
+  /attendance/checkin/{employee_id}:
+    post:
+      consumes:
+      - application/json
+      description: Record check-in time for an employee
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employee_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Attendance'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Employee Check-In
+      tags:
+      - Attendance
+  /attendance/checkout/{employee_id}:
+    post:
+      consumes:
+      - application/json
+      description: Record check-out time for an employee
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employee_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Attendance'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Employee Check-Out
+      tags:
+      - Attendance
+  /departments:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated list of departments
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DepartmentListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List Departments
+      tags:
+      - Department
+    post:
+      consumes:
+      - application/json
+      description: Create a new department
+      parameters:
+      - description: Department data
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/models.Department'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Department'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create Department
+      tags:
+      - Department
+  /departments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete department by ID
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete Department
+      tags:
+      - Department
+    get:
+      consumes:
+      - application/json
+      description: Get department by ID
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Department'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Department
+      tags:
+      - Department
+    put:
+      consumes:
+      - application/json
+      description: Update department by ID
+      parameters:
+      - description: Department ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated department data
+        in: body
+        name: department
+        required: true
+        schema:
+          $ref: '#/definitions/models.Department'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Department'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update Department
+      tags:
+      - Department
+  /employees:
+    get:
+      description: Get a paginated list of employees
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.EmployeeListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List employees with pagination
+      tags:
+      - Employees
+    post:
+      consumes:
+      - application/json
+      description: Create a new employee with all required fields
+      parameters:
+      - description: Employee object
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/models.Employee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Employee'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new employee
+      tags:
+      - Employees
+  /employees/{id}:
+    delete:
+      description: Delete an employee by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete an employee
+      tags:
+      - Employees
+    get:
+      description: Get an employee's details by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Employee'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get employee by ID
+      tags:
+      - Employees
+    put:
+      consumes:
+      - application/json
+      description: Update employee details by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Employee object
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/models.Employee'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Employee'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update an employee
+      tags:
+      - Employees
+  /job-titles:
+    get:
+      description: Get a paginated list of job titles
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.JobTitleListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List job titles
+      tags:
+      - JobTitles
+    post:
+      consumes:
+      - application/json
+      description: Create a new job title in the system
+      parameters:
+      - description: Job Title
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/models.JobTitle'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.JobTitle'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new job title
+      tags:
+      - JobTitles
+  /job-titles/{id}:
+    get:
+      description: Get a specific job title by ID
+      parameters:
+      - description: Job Title ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JobTitle'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a job title by ID
+      tags:
+      - JobTitles
+    put:
+      consumes:
+      - application/json
+      description: Update an existing job title by ID
+      parameters:
+      - description: Job Title ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Job Title
+        in: body
+        name: job
+        required: true
+        schema:
+          $ref: '#/definitions/models.JobTitle'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JobTitle'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a job title
+      tags:
+      - JobTitles
+  /leaves:
+    get:
+      description: Get paginated list of leave requests
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LeaveListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List leave requests with pagination
+      tags:
+      - Leaves
+    post:
+      consumes:
+      - application/json
+      description: Create a new leave request for an employee
+      parameters:
+      - description: Leave Request object
+        in: body
+        name: leave
+        required: true
+        schema:
+          $ref: '#/definitions/models.LeaveRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.LeaveRequest'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new leave request
+      tags:
+      - Leaves
+  /leaves/{id}:
+    delete:
+      description: Delete a leave request by ID
+      parameters:
+      - description: Leave Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a leave request
+      tags:
+      - Leaves
+    get:
+      description: Retrieve leave request details by ID
+      parameters:
+      - description: Leave Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LeaveRequest'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get leave request by ID
+      tags:
+      - Leaves
+    put:
+      consumes:
+      - application/json
+      description: Update leave request details by ID
+      parameters:
+      - description: Leave Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Leave Request object
+        in: body
+        name: leave
+        required: true
+        schema:
+          $ref: '#/definitions/models.LeaveRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LeaveRequest'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a leave request
+      tags:
+      - Leaves
+  /leaves/{id}/approve:
+    patch:
+      description: Approve leave request by ID
+      parameters:
+      - description: Leave Request ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Approve a leave request
+      tags:
+      - Leaves
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return access & refresh tokens
+      parameters:
+      - description: Login payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /payrolls:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated list of payrolls, optionally filter by employee_id
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Page size
+        in: query
+        name: page_size
+        type: integer
+      - description: Filter by employee ID
+        in: query
+        name: employee_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.PayrollListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List Payrolls
+      tags:
+      - Payroll
+    post:
+      consumes:
+      - application/json
+      description: Create a new payroll record for an employee
+      parameters:
+      - description: Payroll data
+        in: body
+        name: payroll
+        required: true
+        schema:
+          $ref: '#/definitions/models.Payroll'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Payroll'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create Payroll
+      tags:
+      - Payroll
+  /payrolls/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a payroll record by ID
+      parameters:
+      - description: Payroll ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete Payroll
+      tags:
+      - Payroll
+    get:
+      consumes:
+      - application/json
+      description: Get a payroll record by ID
+      parameters:
+      - description: Payroll ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Payroll'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Payroll
+      tags:
+      - Payroll
+    put:
+      consumes:
+      - application/json
+      description: Update a payroll record by ID
+      parameters:
+      - description: Payroll ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated payroll data
+        in: body
+        name: payroll
+        required: true
+        schema:
+          $ref: '#/definitions/models.Payroll'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Payroll'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update Payroll
+      tags:
+      - Payroll
+  /refresh:
+    post:
+      description: Generate new access and refresh tokens using refresh token (Token
+        Rotation)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.TokenResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Refresh access token
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account
+      parameters:
+      - description: Register payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register new user
+      tags:
+      - Auth
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: 'Type "Bearer" followed by your JWT token. Example: "Bearer {token}"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
