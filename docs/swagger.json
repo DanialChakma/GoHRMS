@@ -5,7 +5,7 @@
     ],
     "swagger": "2.0",
     "info": {
-        "description": "Human Resource Management System API built with Go (Gin framework), GORM, and MySQL. Supports Employee management, Attendance, Payroll, Leave Requests, Departments, Job Titles, and User Authentication/Authorization.",
+        "description": "Human Resource Management System API built with Go (Gin framework), GORM, and MySQL. Supports Employee management, Attendance, Payroll, Leave Requests, Departments, Job Titles, and User Authentication/Authorization.\n\nIt follows enterprise Controller → Service → Repository pattern.",
         "title": "HRMS API",
         "termsOfService": "http://hrms.example.com/terms/",
         "contact": {
